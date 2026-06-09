@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CDDA · Agent Harness — 让 AI 自己玩一局末日生存</title>
+<meta name="description" content="An AI agent plays Cataclysm: Dark Days Ahead — reading the terminal, weighing the danger, narrating the run, and remembering every death.">
+<style>
+  :root{ --bg:#0d1117; --panel:#161b22; --line:#30363d; --txt:#c9d1d9; --dim:#8b949e;
+         --green:#3fb950; --yellow:#d29922; --red:#f85149; --accent:#58a6ff; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--txt); font:16px/1.65 -apple-system,Segoe UI,Roboto,"PingFang SC","Hiragino Sans GB",sans-serif; }
+  .wrap{ max-width:980px; margin:0 auto; padding:0 22px; }
+  header{ text-align:center; padding:64px 22px 26px; }
+  .badge{ display:inline-block; font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+          color:var(--accent); border:1px solid var(--line); border-radius:20px; padding:4px 13px; margin-bottom:18px; }
+  h1{ font-size:38px; line-height:1.2; margin:0 0 12px; font-weight:700; }
+  h1 .g{ background:linear-gradient(90deg,#58a6ff,#3fb950); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .tag{ font-size:18px; color:var(--dim); max-width:680px; margin:0 auto; }
+  .video{ margin:30px auto 8px; border:1px solid var(--line); border-radius:12px; overflow:hidden;
+          box-shadow:0 20px 60px rgba(0,0,0,.5); background:#000; }
+  .video video{ width:100%; display:block; }
+  .cap{ text-align:center; color:var(--dim); font-size:13px; margin:10px 0 0; }
+  section{ padding:38px 0; border-top:1px solid var(--line); }
+  h2{ font-size:24px; margin:0 0 8px; }
+  .lead{ color:var(--dim); margin:0 0 24px; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:18px 20px; }
+  .card h3{ margin:0 0 6px; font-size:16px; }
+  .card h3 .dot{ display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:middle; }
+  .card p{ margin:0; color:var(--dim); font-size:14.5px; }
+  .steps{ counter-reset:s; list-style:none; padding:0; margin:0; }
+  .steps li{ position:relative; padding:14px 0 14px 52px; border-bottom:1px solid var(--line); }
+  .steps li:last-child{ border-bottom:0; }
+  .steps li::before{ counter-increment:s; content:counter(s); position:absolute; left:0; top:12px;
+                     width:32px; height:32px; border-radius:50%; background:var(--panel); border:1px solid var(--accent);
+                     color:var(--accent); text-align:center; line-height:30px; font-weight:700; }
+  .steps b{ color:var(--txt); }
+  blockquote{ margin:14px 0; padding:12px 18px; border-left:3px solid var(--accent);
+              background:rgba(88,166,255,.07); color:var(--dim); border-radius:0 8px 8px 0; font-size:15px; }
+  .shot{ width:100%; border:1px solid var(--line); border-radius:10px; margin-top:8px; }
+  code{ background:#21262d; padding:1px 6px; border-radius:5px; font-size:13.5px; color:#e6edf3; }
+  footer{ text-align:center; color:var(--dim); font-size:13px; padding:40px 22px 60px; border-top:1px solid var(--line); }
+  a{ color:var(--accent); }
+  nav{ display:flex; align-items:center; gap:14px; padding:18px 0; max-width:980px; margin:0 auto; }
+  nav .logo{ font-weight:800; font-size:18px; text-decoration:none; color:var(--txt); }
+  nav .logo .dot{ color:var(--accent); }
+  nav .sp{ margin-left:auto; }
+  nav a{ color:var(--dim); text-decoration:none; font-size:14px; }
+  nav a:hover{ color:var(--txt); }
+  .mobile-wrap{ display:flex; gap:34px; align-items:center; flex-wrap:wrap; justify-content:center; }
+  .phone{ width:300px; flex:0 0 auto; background:#0a0c10; border:10px solid #1c2128; border-radius:40px;
+          box-shadow:0 24px 60px rgba(0,0,0,.6); overflow:hidden; }
+  .phone .notch{ height:24px; background:#1c2128; border-radius:0 0 14px 14px; width:130px; margin:0 auto; }
+  .phone .screen{ background:linear-gradient(180deg,#0d1117,#0a0c10); padding:14px 14px 20px; }
+  .phone .apptop{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--dim); margin-bottom:10px; }
+  .phone .apptop b{ color:var(--txt); font-size:14px; }
+  .phone .thr{ margin-left:auto; font-size:11px; padding:2px 8px; border-radius:8px; background:rgba(210,153,34,.18); color:var(--yellow); }
+  .phone .scene{ background:#000; border:1px solid var(--line); border-radius:10px; padding:10px 12px;
+                 font:11px/1.3 "SF Mono",Menlo,monospace; color:#5fd17a; white-space:pre; margin-bottom:12px; }
+  .phone .feed{ display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+  .phone .bub{ font-size:13px; padding:8px 11px; border-radius:13px; max-width:90%; }
+  .phone .bub.ai{ background:#161b22; border:1px solid var(--line); align-self:flex-start; border-bottom-left-radius:3px; }
+  .phone .bub.you{ background:var(--accent); color:#0a0c10; align-self:flex-end; border-bottom-right-radius:3px; }
+  .phone .mic{ display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .phone .micbtn{ width:64px; height:64px; border-radius:50%; background:radial-gradient(circle at 50% 35%,#58a6ff,#1f6feb);
+                  display:flex; align-items:center; justify-content:center; font-size:27px; box-shadow:0 0 0 6px rgba(88,166,255,.16); }
+  .phone .hint{ font-size:11px; color:var(--dim); }
+  .cmds{ flex:1 1 250px; min-width:230px; }
+  .cmds h3{ margin:0 0 12px; }
+  .cmds .cmd{ background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:9px 13px; margin-bottom:8px; font-size:13.5px; }
+  .cmds .cmd b{ color:var(--accent); }
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">抢戏<span class="dot">.</span>qiangxi</a>
+  <span class="sp"></span>
+  <a href="index.html">← 返回首页</a>
+  <a href="https://github.com/CardinalWalls/qiangxi">GitHub</a>
+</nav>
+<header>
+  <div class="wrap">
+    <span class="badge">qiangxi 项目 · 自玩游戏</span>
+    <h1>让 AI 自己玩一局 <span class="g">末日生存</span></h1>
+    <p class="tag">一个 AI agent 操作终端版 <b>Cataclysm: Dark Days Ahead</b>——它读懂字符画面、权衡危险、亲手按键，一边玩一边解说，还会记住每一次死亡，把它写成故事。</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="video">
+    <video src="cdda-demo.mp4" poster="screenshot.png" controls autoplay muted loop playsinline></video>
+  </div>
+  <p class="cap">实时录屏:左边是游戏 TUI,右边是 agent 解析出的状态、威胁判定、实时解说;地图下方是可编辑的游戏目标。</p>
+</div>
+
+<div class="wrap">
+  <section>
+    <h2>你在看什么</h2>
+    <p class="lead">同一局游戏,被拆成"它看到的"和"它在想的"两半,平时藏起来的判断被摊开。</p>
+    <div class="grid">
+      <div class="card"><h3><span class="dot" style="background:var(--green)"></span>实时 TUI</h3><p>终端版游戏原汁原味跑在 tmux 里,全彩字符画面,agent 通过截取画面来"看"。</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--red)"></span>威胁闸门</h3><p>SAFE / CAUTION / ABORT 一目了然。被攻击就强制撤离——这是不让角色乱送死的硬规则。</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--accent)"></span>实时解说</h3><p>agent 边玩边讲:危险升降、看到了什么、在做什么决定。一句句滚动,像主播解说自己这局。</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--yellow)"></span>状态与生命</h3><p>六部位血条、需求、地点、时间、体型——从画面里解析出来,而不是凭空编。</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--green)"></span>游戏目标</h3><p>当前目标列在地图下方,你随时能在输入栏里补一条,agent 会优先去追你定的目标。</p></div>
+      <div class="card"><h3><span class="dot" style="background:var(--accent)"></span>会成长的故事</h3><p>每次死亡都不删,写成一章、附一条教训;系统因此越玩越聪明,死法也变成内容。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>它怎么运作</h2>
+    <p class="lead">不靠强化学习、不靠多 agent 互搏——靠"会读规则、会判危险、会自我总结"。</p>
+    <ol class="steps">
+      <li><b>看画面</b>:截取 tmux 里的游戏字符画面,解析侧边栏、地图、消息日志。</li>
+      <li><b>定目标</b>:一个"盘点"技能按优先级算出当下最该干的事(治感染 &gt; 临界需求 &gt; 推进),你也能手动补目标。</li>
+      <li><b>动手</b>:子 agent 读规则手册、决定一小段动作、发键操作,绝不背着丧尸赶路。</li>
+      <li><b>讲故事</b>:同时把这一步解说出来,实时显示在网页上。</li>
+      <li><b>记教训</b>:卡住或死亡时,上层从这局的过程里总结出一条规则、写进手册——下次就不再犯。</li>
+    </ol>
+    <blockquote>“我们不删掉死亡。一个能学到东西的死亡不是损失,是一条分支。我们留住分支,走一条更好的。”</blockquote>
+  </section>
+
+  <section>
+    <h2>手机语音版 · 张嘴就能玩</h2>
+    <p class="lead">不用看键位、不用记指令——你说一句,它替你玩、再用语音讲给你听。前台是"嘴",后台还是那个会判危险、记教训的"导演脑"。和「裁了吗」同一套范式。(界面预览)</p>
+    <div class="mobile-wrap">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="apptop">🧟 <b>末日求生 · 语音版</b><span class="thr">CAUTION</span></div>
+          <div class="scene">  ####..@....r
+ .....┌──┐..Z.
+ ..~..│{.│....
+ 树林 · 清晨 · 满血</div>
+          <div class="feed">
+            <div class="bub you">周围有什么?</div>
+            <div class="bub ai">松林里。西边一只丧尸晃过来,北边几只老鼠。你左腿还感染着——别恋战。</div>
+            <div class="bub you">往南走,别死</div>
+            <div class="bub ai">收到,带你往南撤。丧尸跟了三步……甩开了。前面好像有条小溪。</div>
+          </div>
+          <div class="mic">
+            <div class="micbtn">🎙</div>
+            <div class="hint">按住说话</div>
+          </div>
+        </div>
+      </div>
+      <div class="cmds">
+        <h3>你可以这样说</h3>
+        <div class="cmd"><b>“周围有什么?”</b> — 它读屏后用大白话告诉你处境</div>
+        <div class="cmd"><b>“往南走 / 进那栋房子”</b> — 它替你走位,危险了自动撤</div>
+        <div class="cmd"><b>“捡起来 / 打它 / 歇会儿”</b> — 一句口语,翻译成正确操作</div>
+        <div class="cmd"><b>“接下来怎么办?”</b> — 按当前最该干的事给你建议</div>
+        <p style="color:var(--dim);font-size:13px;margin-top:14px">嘴负责说、导演脑负责判危险与记教训——语音进、语音出,游戏在后台被它一步步推进。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>这一局的主角</h2>
+    <p class="lead">Torri Kohler——52 岁、微胖的"度假泳客",末日把她堵在海滩上:一身比基尼、两只拳头、一条正在感染的腿。她其实是个受过训练的击剑手,只差一把刀。</p>
+    <img class="shot" src="screenshot.png" alt="CDDA agent harness 网页截图">
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    一个 agent 自玩游戏的实验 · 录屏由无头浏览器自动生成<br>
+    <a href="https://github.com/CardinalWalls/qiangxi">github.com/CardinalWalls/qiangxi</a>
+  </div>
+</footer>
+</body>
+</html>

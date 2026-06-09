@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>抢戏 · qiangxi — 让 AI 上台演,把后台的"编排脑子"摊给你看</title>
+<meta name="description" content="qiangxi（抢戏）：一类语音驱动的 AI agent 体验。AI 在台前演一个角色，你用语音跟它互动，而后台那个掌控全局的『导演脑』被实时可视化。">
+<style>
+  :root{ --bg:#0b0e14; --panel:#161b22; --line:#2a2f3a; --txt:#c9d1d9; --dim:#8b949e;
+         --green:#3fb950; --yellow:#d29922; --red:#f85149; --accent:#58a6ff; --pink:#db61a2; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:radial-gradient(1200px 600px at 50% -10%,rgba(88,166,255,.10),transparent),var(--bg);
+        color:var(--txt); font:16px/1.65 -apple-system,Segoe UI,Roboto,"PingFang SC","Hiragino Sans GB",sans-serif; }
+  .wrap{ max-width:1000px; margin:0 auto; padding:0 22px; }
+  nav{ display:flex; align-items:center; gap:14px; padding:18px 0; }
+  nav .logo{ font-weight:800; font-size:18px; letter-spacing:.02em; }
+  nav .logo .dot{ color:var(--accent); }
+  nav .sp{ margin-left:auto; }
+  nav a{ color:var(--dim); text-decoration:none; font-size:14px; }
+  nav a:hover{ color:var(--txt); }
+  header{ text-align:center; padding:62px 22px 30px; }
+  .badge{ display:inline-block; font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+          color:var(--accent); border:1px solid var(--line); border-radius:20px; padding:5px 14px; margin-bottom:20px; }
+  h1{ font-size:44px; line-height:1.18; margin:0 0 16px; font-weight:800; }
+  h1 .g{ background:linear-gradient(90deg,#58a6ff,#db61a2); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .tag{ font-size:19px; color:var(--dim); max-width:720px; margin:0 auto; }
+  .concept{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:40px 0; }
+  .concept .c{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:20px; }
+  .concept .c .n{ font-size:13px; color:var(--accent); font-weight:700; letter-spacing:.04em; }
+  .concept .c h3{ margin:6px 0 6px; font-size:17px; }
+  .concept .c p{ margin:0; color:var(--dim); font-size:14px; }
+  section{ padding:30px 0 10px; }
+  .h2{ text-align:center; margin:24px 0 6px; }
+  .h2 h2{ font-size:26px; margin:0; }
+  .h2 p{ color:var(--dim); margin:6px 0 0; }
+  .projects{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:24px 0 10px; }
+  .proj{ display:block; text-decoration:none; color:inherit; background:var(--panel); border:1px solid var(--line);
+         border-radius:14px; overflow:hidden; transition:border-color .15s, transform .15s; }
+  .proj:hover{ border-color:var(--accent); transform:translateY(-2px); }
+  .proj .top{ padding:22px 22px 4px; }
+  .proj .kic{ font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
+  .proj h3{ font-size:22px; margin:8px 0 6px; }
+  .proj p{ color:var(--dim); margin:0 0 14px; font-size:14.5px; }
+  .proj .media{ height:150px; background:#000 center/cover no-repeat; border-top:1px solid var(--line); position:relative; }
+  .proj .media .ascii{ font:11px/1.15 "SF Mono",Menlo,monospace; color:#5fd17a; padding:12px 16px; white-space:pre; opacity:.85; }
+  .proj .go{ display:inline-flex; align-items:center; gap:6px; color:var(--accent); font-size:14px; padding:0 22px 18px; }
+  .pillrow{ padding:0 22px 16px; }
+  .pill{ display:inline-block; font-size:11px; color:var(--dim); border:1px solid var(--line); border-radius:10px; padding:2px 9px; margin:0 5px 5px 0; }
+  footer{ text-align:center; color:var(--dim); font-size:13px; padding:50px 22px 60px; margin-top:30px; border-top:1px solid var(--line); }
+  a{ color:var(--accent); }
+  @media(max-width:760px){ .concept,.projects{ grid-template-columns:1fr; } h1{ font-size:34px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <span class="logo">抢戏<span class="dot">.</span>qiangxi</span>
+    <span class="sp"></span>
+    <a href="#projects">项目</a>
+    <a href="https://github.com/CardinalWalls/qiangxi">GitHub</a>
+  </nav>
+</div>
+
+<header>
+  <div class="wrap">
+    <span class="badge">语音 AI agent · 编排可视化</span>
+    <h1>让 AI 上台演,<br>把后台的 <span class="g">"编排脑子"</span> 摊给你看</h1>
+    <p class="tag">抢戏(qiangxi)是一类语音驱动的 AI agent 体验:AI 在台前自然地演一个角色,你用语音跟它互动——而平时藏起来的那个掌控全局的"导演脑",被实时摊在屏幕上。</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="concept">
+    <div class="c"><div class="n">范式</div><h3>脑 / 嘴 分离</h3><p>一个"导演脑"掌握状态与策略、做所有决定;前台的"嘴"只管自然地把这一步演出来。行为逻辑不塞进表演模型。</p></div>
+    <div class="c"><div class="n">交互</div><h3>语音优先</h3><p>你开口说,它实时回应。压迫感、节奏、即兴,都在语音里发生,而不是打字框。</p></div>
+    <div class="c"><div class="n">透明</div><h3>编排被看见</h3><p>它此刻在用哪招、走到哪个阶段、危险多高、你守得怎样——全部实时投影到屏幕,把隐藏的"编排脑子"摊开。</p></div>
+  </div>
+</div>
+
+<div class="wrap" id="projects">
+  <div class="h2"><h2>用这套范式做的东西</h2><p>同一个"脑/嘴分离 + 编排可视化",落到不同场景</p></div>
+  <div class="projects">
+
+    <a class="proj" href="https://github.com/CardinalWalls/qiangxi">
+      <div class="top">
+        <div class="kic" style="color:var(--pink)">主打 · 训练工具</div>
+        <h3>裁了吗</h3>
+        <p>实时语音裁员谈话陪练。你跟一个冷面 HR 真人语音对话,它按套路一步步逼你当场让步;屏幕实时显示它在用哪一招、走到哪个阶段、你守权守得怎么样。一个防御性的反 PUA 训练工具。</p>
+      </div>
+      <div class="pillrow">
+        <span class="pill">LiveKit + Gemini 原生音频</span><span class="pill">导演脑 = 状态机 + 战术库</span><span class="pill">R1–R5 实时打分</span>
+      </div>
+      <span class="go">看项目 →</span>
+    </a>
+
+    <a class="proj" href="cdda.html">
+      <div class="top">
+        <div class="kic" style="color:var(--green)">Demo · 自玩游戏</div>
+        <h3>末日生存 · agent 自玩</h3>
+        <p>一个 AI agent 操作终端版 roguelike《Cataclysm: DDA》:读懂字符画面、权衡危险、亲手按键,一边玩一边解说,还会记住每一次死亡、写成故事。也能做成手机语音版,张嘴就能玩。</p>
+      </div>
+      <div class="media"><div class="ascii">  ####..@....r
+ .....┌──┐..Z.
+ ..~..│{.│....
+ ..~~.└──┘.....
+  THREAT: CAUTION</div></div>
+      <span class="go">进入展示页 →</span>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    抢戏 · qiangxi —— 语音 AI agent 与可视化编排的实验场<br>
+    <a href="https://github.com/CardinalWalls/qiangxi">github.com/CardinalWalls/qiangxi</a>
+  </div>
+</footer>
+</body>
+</html>
